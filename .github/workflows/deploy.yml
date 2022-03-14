@@ -3,14 +3,15 @@ name: Deploy to Integration Org
 on: 
   push:
     branches: [main]
+  env:
+    DEV_USERNAME: ${{ secrets.USERNAME }}
+    DEV_CONSUMER_KEY: ${{ secrets.CONSUMER_KEY }}
+    SALESFORCE_JWT_SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
 jobs:  
   deploy-to-int: 
     runs-on: ubuntu-latest
 
-    env:
-      DEV_USERNAME: ${{ secrets.INT_USERNAME }}
-      DEV_CONSUMER_KEY: ${{ secrets.INT_CONSUMER_KEY }}
 
     steps:
       - name: Install Salesforce CLI
@@ -41,11 +42,10 @@ jobs:
           sfdx force:source:convert --sourcepath "force-app" --outputdir metadatadeploy
       - name: Authenticate Org
         shell: bash
-        env:
-          SALESFORCE_JWT_SECRET_KEY: ${{ secrets.DEV_SECRET_KEY }}
+      
         run: | 
           echo "${SALESFORCE_JWT_SECRET_KEY}" > server.key
-          sfdx auth:jwt:grant -f ./server.key -a DevOrg -r https://login.salesforce.com -i ${{ secrets.DEV_CONSUMER_KEY }} -u ${{ secrets.DEV_USERNAME }}
+          sfdx auth:jwt:grant -f ./server.key -a DevOrg -r https://login.salesforce.com -i "${DEV_CONSUMER_KEY}" -u "${DEV_USERNAME}"
       
       - name: Deploy on Target Org
         run: |
