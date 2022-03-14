@@ -41,7 +41,7 @@ jobs:
 
         run: | 
           echo "${SALESFORCE_JWT_SECRET_KEY}" > server.key
-          sfdx auth:jwt:grant -f ./server.key -a DevOrg -i "${DEV_CONSUMER_KEY}" -u "${USERNAME}" -r https://login.salesforce.com
+          sfdx auth:jwt:grant -f ./server.key -a DevOrg -i "${DEV_CONSUMER_KEY}" -u "${DEV_USERNAME}" -r https://login.salesforce.com
       - name: Run tests
         run: |
           cd main
