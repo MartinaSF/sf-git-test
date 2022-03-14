@@ -3,10 +3,11 @@ name: Deploy to Integration Org
 on: 
   push:
     branches: [main]
-  env:
-    DEV_USERNAME: ${{ secrets.USERNAME }}
-    DEV_CONSUMER_KEY: ${{ secrets.CONSUMER_KEY }}
-    SALESFORCE_JWT_SECRET_KEY: ${{ secrets.SECRET_KEY }}
+
+env:
+  DEV_USERNAME: ${{ secrets.USERNAME }}
+  DEV_CONSUMER_KEY: ${{ secrets.CONSUMER_KEY }}
+  SALESFORCE_JWT_SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
 jobs:  
   deploy-to-int: 
