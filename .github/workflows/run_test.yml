@@ -3,12 +3,15 @@ on:
   pull_request:
     branches: [main]
     types: [opened, synchronize, reopened]
+
+env:
+  DEV_USERNAME: ${{ secrets.USERNAME }}
+  DEV_CONSUMER_KEY: ${{ secrets.CONSUMER_KEY }}
+  SALESFORCE_JWT_SECRET_KEY: ${{ secrets.SECRET_KEY }}
 jobs:  
   run-tests: 
     runs-on: ubuntu-latest
-    env:
-      DEV_USERNAME: ${{ secrets.INT_USERNAME }}
-      DEV_CONSUMER_KEY: ${{ secrets.INT_CONSUMER_KEY }}
+
     steps:
       - name: Install Salesforce CLI
         run: |
@@ -35,11 +38,10 @@ jobs:
           sfdx force:source:convert --sourcepath "force-app" --outputdir metadatadeploy
       - name: Authenticate Org
         shell: bash
-        env:
-          SALESFORCE_JWT_SECRET_KEY: ${{ secrets.DEV_SECRET_KEY }}
+
         run: | 
           echo "${SALESFORCE_JWT_SECRET_KEY}" > server.key
-          sfdx auth:jwt:grant -f ./server.key -a DevOrg -i ${{ secrets.DEV_CONSUMER_KEY }} -u ${{ secrets.DEV_USERNAME }} -r https://login.salesforce.com
+          sfdx auth:jwt:grant -f ./server.key -a DevOrg -i "${DEV_CONSUMER_KEY}" -u "${USERNAME}" -r https://login.salesforce.com
       - name: Run tests
         run: |
           cd main
